@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+}
+#mapid {
+  height: 100%;
+  width: 100%;
+}
+
+.gauge {
+  width: 100%;
+  height: 105px;
+}
+
+.popup .leaflet-popup-content-wrapper {
+  height: 150px;
+  width: 150px;
+  /* cursor: pointer; */
+}
+
+.popup p {
+  margin: 2px;
+}
