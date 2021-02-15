@@ -67,7 +67,7 @@ class SensorPopup {
 
     this.config.circleThickness = 0.2;
     this.config.textVertPosition = 0.2;
-    this.config.waveAnimateTime = 3000;
+    this.config.waveAnimateTime = 2000;
 
     const temperatureBase = p5LikeMapFunc(
       this.temperature1,
@@ -143,9 +143,7 @@ window.onload = function () {
   soxEventListener.connected = function (soxEvent) {
     console.log("[main.js] Connected " + soxEvent.soxClient);
 
-    if (!soxEvent.soxClient.discoverDevices()) {
-      // status("[main.js] Couldn't get device list: " + soxEvent.soxClient);
-    }
+    soxEvent.soxClient.discoverDevices();
   };
 
   soxEventListener.discovered = function (soxEvent) {
@@ -159,7 +157,7 @@ window.onload = function () {
           ) !== -1
         ) {
           client.subscribeDevice(soxEvent.devices[i]);
-          alert(soxEvent.devices[i] + "を登録しました");
+          // alert(soxEvent.devices[i] + "を登録しました");
         }
       }
     } catch (e) {
@@ -172,14 +170,14 @@ window.onload = function () {
     let temperature1 = "";
     let humidity1 = "";
     let identifier = "";
-    alert(soxEvent.device.name + "の情報を受け取りました");
+    // alert(soxEvent.device.name + "の情報を受け取りました");
 
     for (var i = 0; i < soxEvent.device.transducers.length; i++) {
       if (soxEvent.device.transducers[i].sensorData != null) {
         switch (soxEvent.device.transducers[i].id) {
           case "identifier":
             identifier = soxEvent.device.transducers[i].sensorData.rawValue;
-            alert(identifier + "の情報を受け取りました");
+            // alert(identifier + "の情報を受け取りました");
 
             break;
           case "temperature1":
