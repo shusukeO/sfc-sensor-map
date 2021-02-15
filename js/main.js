@@ -1,17 +1,97 @@
 const sensors = [
   //本館
-  [35.38842480417413, 139.42791340013696],
+  {
+    name: "greenblue_sensor_200002",
+    location: [35.38842480417413, 139.42791340013696],
+  },
   //生協
-  [35.38723962995367, 139.42599830372242],
+  {
+    name: "greenblue_sensor_200007",
+    location: [35.38723962995367, 139.42599830372242],
+  },
   //中高部
-  [35.385887600519254, 139.42571612055917],
+  {
+    name: "greenblue_sensor_200006",
+    location: [35.385887600519254, 139.42571612055917],
+  },
   //i前
-  [35.38841346727527, 139.42666895800951],
+  {
+    name: "greenblue_sensor_301001",
+    location: [35.38841346727527, 139.42666895800951],
+  },
   //i中
-  [35.388332449013454, 139.42665726646885],
+  {
+    name: "greenblue_sensor_301002",
+    location: [35.388332449013454, 139.42665726646885],
+  },
   //i後
-  [35.38823713342666, 139.42663388334776],
+  {
+    name: "greenblue_sensor_301003",
+    location: [35.38823713342666, 139.42663388334776],
+  },
 ];
+
+class SensorPopup {
+  constructor(name, location) {
+    this.name = name;
+    this.location = location;
+    this.temperature1 = 0;
+    this.humidity1 = 0;
+    this.isActive = false;
+    this.config = liquidFillGaugeDefaultSettings();
+  }
+
+  setTemperature1(value) {
+    this.temperature1 = Math.round(value * 10) / 10;
+  }
+
+  setHumidity1(value) {
+    this.humidity1 = Math.round(value * 10) / 10;
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  setActive(value) {
+    this.isActive = value;
+  }
+
+  createGaugePopup() {
+    //表示状態でなければ処理を行わない
+    if (!this.isActive) return;
+
+    $(`#${this.name}`).html(
+      `<svg id="fillgauge-${this.name}" class="gauge" onclick="popupClickedFunc();;"></svg><p>Temperature:${this.temperature1}&#8451;</p>`
+    );
+
+    this.config.circleThickness = 0.2;
+    this.config.textVertPosition = 0.2;
+    this.config.waveAnimateTime = 3000;
+
+    const temperatureBase = p5LikeMapFunc(
+      this.temperature1,
+      minTemperature,
+      maxTemperature,
+      0,
+      255
+    );
+    this.config.circleColor =
+      "rgb(" + [temperatureBase, 128, 255 - temperatureBase].join(",") + ")";
+    loadLiquidFillGauge(`fillgauge-${this.name}`, this.humidity1, this.config);
+  }
+}
+
+let sensorPopupObjs = [];
+for (let i = 0; i < sensors.length; i++) {
+  sensorPopupObjs.push(new SensorPopup(sensors[i].name, sensors[i].location));
+}
+
+//sox接続設定
+const boshService = "http://sox.sfc.keio.ac.jp:5280/http-bind/";
+const xmppServer = "sox.sfc.keio.ac.jp";
+const jid = "guest@sox.sfc.keio.ac.jp";
+const password = "cnsguest";
 
 //温度
 const maxTemperature = 40;
@@ -22,8 +102,8 @@ const p5LikeMapFunc = (n, start1, stop1, start2, stop2) => {
 
 let mapCenter = [35.38742695145222, 139.42699632079737];
 
+//地図作成
 const mymap = L.map("mapid").setView(mapCenter, 18);
-
 L.tileLayer(
   "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
   {
@@ -37,41 +117,92 @@ L.tileLayer(
   }
 ).addTo(mymap);
 
-for (let i = 0; i < sensors.length; i++) {
-  let config = liquidFillGaugeDefaultSettings();
-  let temperatureBase;
-
-  config.circleThickness = 0.2;
-  config.textVertPosition = 0.2;
-  config.waveAnimateTime = 3000;
-
-  L.marker(sensors[i])
+//マーカー作成
+for (let i = 0; i < sensorPopupObjs.length; i++) {
+  L.marker(sensorPopupObjs[i].location)
     .addTo(mymap)
-    .bindPopup(
-      `<svg id="fillgauge${i}" class="gauge" onclick="gauge1.update(NewValue());"></svg><p>Temperature: ${i}&#8451;</p>`,
-      {
-        autoClose: false,
-        closeButton: false,
-        className: "popup",
-      }
-    )
-    .on("click", () => {
-      temperatureBase = p5LikeMapFunc(
-        i,
-        minTemperature,
-        maxTemperature,
-        0,
-        255
-      );
-      config.circleColor =
-        "rgb(" + [temperatureBase, 128, 255 - temperatureBase].join(",") + ")";
-      loadLiquidFillGauge(`fillgauge${i}`, i, config);
+    .bindPopup(`<div id="${sensorPopupObjs[i].name}"></div>`, {
+      autoClose: false,
+      closeButton: false,
+      className: "popup",
     })
+    .on("popupopen", () => {
+      sensorPopupObjs[i].setActive(true);
+      sensorPopupObjs[i].createGaugePopup();
+    })
+    .on("popupclose", () => {
+      sensorPopupObjs[i].setActive(false);
+    })
+
     .openPopup();
-
-  temperatureBase = p5LikeMapFunc(i, minTemperature, maxTemperature, 0, 255);
-  config.circleColor =
-    "rgb(" + [temperatureBase, 128, 255 - temperatureBase].join(",") + ")";
-
-  loadLiquidFillGauge(`fillgauge${i}`, i, config);
 }
+
+window.onload = function () {
+  var client = new SoxClient(boshService, xmppServer, jid, password);
+  var soxEventListener = new SoxEventListener();
+  soxEventListener.connected = function (soxEvent) {
+    console.log("[main.js] Connected " + soxEvent.soxClient);
+
+    if (!soxEvent.soxClient.discoverDevices()) {
+      // status("[main.js] Couldn't get device list: " + soxEvent.soxClient);
+    }
+  };
+
+  soxEventListener.discovered = function (soxEvent) {
+    try {
+      console.log("[main.js] Discovered " + soxEvent.devices);
+      for (var i = 0; i < soxEvent.devices.length; i++) {
+        //必要なセンサーのみ登録
+        if (
+          sensors.findIndex(
+            ({ name }) => name === soxEvent.devices[i].nodeName
+          ) !== -1
+        ) {
+          client.subscribeDevice(soxEvent.devices[i]);
+          alert(soxEvent.devices[i] + "を登録しました");
+        }
+      }
+    } catch (e) {
+      printStackTrace(e);
+    }
+  };
+
+  //データ受信イベント
+  soxEventListener.sensorDataReceived = function (soxEvent) {
+    let temperature1 = "";
+    let humidity1 = "";
+    let identifier = "";
+    alert(soxEvent.device.name + "の情報を受け取りました");
+
+    for (var i = 0; i < soxEvent.device.transducers.length; i++) {
+      if (soxEvent.device.transducers[i].sensorData != null) {
+        switch (soxEvent.device.transducers[i].id) {
+          case "identifier":
+            identifier = soxEvent.device.transducers[i].sensorData.rawValue;
+            alert(identifier + "の情報を受け取りました");
+
+            break;
+          case "temperature1":
+            temperature1 = soxEvent.device.transducers[i].sensorData.rawValue;
+            console.log(soxEvent.device.transducers[i].sensorData.rawValue);
+            break;
+          case "humidity1":
+            humidity1 = soxEvent.device.transducers[i].sensorData.rawValue;
+            console.log(soxEvent.device.transducers[i].sensorData.rawValue);
+            break;
+        }
+      }
+    }
+
+    for (let i = 0; i < sensorPopupObjs.length; i++) {
+      if (sensorPopupObjs[i].getName() === `greenblue_sensor_${identifier}`) {
+        sensorPopupObjs[i].setTemperature1(temperature1);
+        sensorPopupObjs[i].setHumidity1(humidity1);
+        sensorPopupObjs[i].createGaugePopup();
+      }
+    }
+  };
+
+  client.setSoxEventListener(soxEventListener);
+  client.connect();
+};
