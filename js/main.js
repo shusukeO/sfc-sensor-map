@@ -31,74 +31,17 @@ const sensors = [
   },
 ];
 
-class SensorPopup {
-  constructor(name, location) {
-    this.name = name;
-    this.location = location;
-    this.temperature1 = 0;
-    this.humidity1 = 0;
-    this.isActive = false;
-    this.config = liquidFillGaugeDefaultSettings();
-  }
-
-  setTemperature1(value) {
-    this.temperature1 = Math.round(value * 10) / 10;
-  }
-
-  setHumidity1(value) {
-    this.humidity1 = Math.round(value * 10) / 10;
-  }
-
-  getName() {
-    return this.name;
-  }
-
-  setActive(value) {
-    this.isActive = value;
-  }
-
-  createGaugePopup() {
-    //表示状態でなければ処理を行わない
-    if (!this.isActive) return;
-
-    $(`#${this.name}`).html(
-      `<svg id="fillgauge-${this.name}" class="gauge" onclick="popupClickedFunc();;"></svg><p>Temperature:${this.temperature1}&#8451;</p>`
-    );
-
-    this.config.circleThickness = 0.2;
-    this.config.textVertPosition = 0.2;
-    this.config.waveAnimateTime = 2000;
-
-    const temperatureBase = p5LikeMapFunc(
-      this.temperature1,
-      minTemperature,
-      maxTemperature,
-      0,
-      255
-    );
-    this.config.circleColor =
-      "rgb(" + [temperatureBase, 128, 255 - temperatureBase].join(",") + ")";
-    loadLiquidFillGauge(`fillgauge-${this.name}`, this.humidity1, this.config);
-  }
-}
-
-let sensorPopupObjs = [];
-for (let i = 0; i < sensors.length; i++) {
-  sensorPopupObjs.push(new SensorPopup(sensors[i].name, sensors[i].location));
-}
-
 //sox接続設定
 const boshService = "http://sox.sfc.keio.ac.jp:5280/http-bind/";
 const xmppServer = "sox.sfc.keio.ac.jp";
 const jid = "guest@sox.sfc.keio.ac.jp";
 const password = "cnsguest";
 
-//温度
-const maxTemperature = 40;
-const minTemperature = -5;
-const p5LikeMapFunc = (n, start1, stop1, start2, stop2) => {
-  return ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2;
-};
+//センサーポップアップのオブジェクトをセンサーの数作成
+let sensorPopupObjs = [];
+for (let i = 0; i < sensors.length; i++) {
+  sensorPopupObjs.push(new SensorPopup(sensors[i].name, sensors[i].location));
+}
 
 let mapCenter = [35.38742695145222, 139.42699632079737];
 
