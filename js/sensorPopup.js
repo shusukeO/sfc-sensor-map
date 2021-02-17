@@ -27,7 +27,7 @@ class SensorPopup {
   createMarker(map) {
     L.marker(this.location)
       .addTo(map)
-      .bindPopup(`<div id="${this.name}" class="test-popup-link"></div>`, {
+      .bindPopup(`<div id="${this.name}" class="modal-link"></div>`, {
         autoClose: false,
         closeButton: false,
         closeOnClick: false,
@@ -37,22 +37,7 @@ class SensorPopup {
       .on("popupopen", () => {
         this.setActive(true);
         this.createGaugePopup();
-
-        $(".test-popup-link").magnificPopup({
-          items: [
-            {
-              src: "img1.jpg",
-            },
-            {
-              src: "img2.jpg",
-            },
-          ],
-          gallery: {
-            enabled: true,
-          },
-          type: "image",
-          // other options
-        });
+        this.createModal();
       })
       //ポップアップクローズ時の処理
       .on("popupclose", () => {
@@ -62,12 +47,29 @@ class SensorPopup {
       .openPopup();
   }
 
+  createModal() {
+    $(".modal-link").magnificPopup({
+      delegate: "a",
+      type: "inline",
+      gallery: {
+        enabled: true,
+      },
+      callbacks: {
+        open: function () {},
+        close: function () {},
+        // elementParse: function (item) {
+        //   item.src = item.src + "/val=123";
+        // },
+      },
+    });
+  }
+
   createGaugePopup() {
     //表示状態でなければ処理を行わない
     if (!this.isActive) return;
 
     $(`#${this.name}`).html(
-      `<svg id="fillgauge-${this.name}" class="gauge" onclick="popupClickedFunc();;"></svg><p>Temperature:${this.temperature1}&#8451;</p>`
+      `<a href="#modal-${this.name}"><svg id="fillgauge-${this.name}" class="gauge" onclick=""></svg><p>Temperature:${this.temperature1}&#8451;</p></a>`
     );
 
     this.config.circleThickness = 0.2;

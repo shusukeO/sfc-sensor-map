@@ -4,14 +4,6 @@ const xmppServer = "sox.sfc.keio.ac.jp";
 const jid = "guest@sox.sfc.keio.ac.jp";
 const password = "cnsguest";
 
-//センサーポップアップのオブジェクトをセンサーの数作成
-const sensorPopupObjs = [];
-for (let i = 0; i < sensorsData.length; i++) {
-  sensorPopupObjs.push(
-    new SensorPopup(sensorsData[i].name, sensorsData[i].location)
-  );
-}
-
 let mapCenter = [35.38742695145222, 139.42699632079737];
 
 //地図作成
@@ -29,8 +21,13 @@ L.tileLayer(
   }
 ).addTo(mymap);
 
-//マーカー作成
-for (let i = 0; i < sensorPopupObjs.length; i++) {
+//センサーポップアップのオブジェクトをセンサーの数作成
+const sensorPopupObjs = [];
+for (let i = 0; i < sensorsData.length; i++) {
+  sensorPopupObjs.push(
+    new SensorPopup(sensorsData[i].name, sensorsData[i].location)
+  );
+  //マーカー作成
   sensorPopupObjs[i].createMarker(mymap);
 }
 

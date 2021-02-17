@@ -21,3 +21,21 @@ body {
 .popup p {
   margin: 2px;
 }
+
+a {
+  text-decoration: none;
+}
+
+#open-popup {
+  padding: 20px;
+}
+.white-popup {
+  position: relative;
+  background: #fff;
+  padding: 40px;
+  width: auto;
+  max-width: 200px;
+  margin: 20px auto;
+  text-align: center;
+  user-select: none;
+}
