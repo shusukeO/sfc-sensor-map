@@ -38,7 +38,7 @@ const jid = "guest@sox.sfc.keio.ac.jp";
 const password = "cnsguest";
 
 //センサーポップアップのオブジェクトをセンサーの数作成
-let sensorPopupObjs = [];
+const sensorPopupObjs = [];
 for (let i = 0; i < sensors.length; i++) {
   sensorPopupObjs.push(new SensorPopup(sensors[i].name, sensors[i].location));
 }
@@ -64,14 +64,33 @@ L.tileLayer(
 for (let i = 0; i < sensorPopupObjs.length; i++) {
   L.marker(sensorPopupObjs[i].location)
     .addTo(mymap)
-    .bindPopup(`<div id="${sensorPopupObjs[i].name}"></div>`, {
-      autoClose: false,
-      closeButton: false,
-      className: "popup",
-    })
+    .bindPopup(
+      `<div id="${sensorPopupObjs[i].name}" class="test-popup-link"></div>`,
+      {
+        autoClose: false,
+        closeButton: false,
+        className: "popup",
+      }
+    )
     .on("popupopen", () => {
       sensorPopupObjs[i].setActive(true);
       sensorPopupObjs[i].createGaugePopup();
+
+      $(".test-popup-link").magnificPopup({
+        items: [
+          {
+            src: "img1.jpg",
+          },
+          {
+            src: "img2.jpg",
+          },
+        ],
+        gallery: {
+          enabled: true,
+        },
+        type: "image",
+        // other options
+      });
     })
     .on("popupclose", () => {
       sensorPopupObjs[i].setActive(false);
@@ -81,8 +100,8 @@ for (let i = 0; i < sensorPopupObjs.length; i++) {
 }
 
 window.onload = function () {
-  var client = new SoxClient(boshService, xmppServer, jid, password);
-  var soxEventListener = new SoxEventListener();
+  const client = new SoxClient(boshService, xmppServer, jid, password);
+  const soxEventListener = new SoxEventListener();
   soxEventListener.connected = function (soxEvent) {
     console.log("[main.js] Connected " + soxEvent.soxClient);
 
