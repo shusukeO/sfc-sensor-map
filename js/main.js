@@ -1,36 +1,3 @@
-const sensors = [
-  //本館
-  {
-    name: "greenblue_sensor_200002",
-    location: [35.38842480417413, 139.42791340013696],
-  },
-  //生協
-  {
-    name: "greenblue_sensor_200007",
-    location: [35.38723962995367, 139.42599830372242],
-  },
-  //中高部
-  {
-    name: "greenblue_sensor_200006",
-    location: [35.385887600519254, 139.42571612055917],
-  },
-  //i前
-  {
-    name: "greenblue_sensor_301001",
-    location: [35.38841346727527, 139.42666895800951],
-  },
-  //i中
-  {
-    name: "greenblue_sensor_301002",
-    location: [35.388332449013454, 139.42665726646885],
-  },
-  //i後
-  {
-    name: "greenblue_sensor_301003",
-    location: [35.38823713342666, 139.42663388334776],
-  },
-];
-
 //sox接続設定
 const boshService = "http://sox.sfc.keio.ac.jp:5280/http-bind/";
 const xmppServer = "sox.sfc.keio.ac.jp";
@@ -39,8 +6,10 @@ const password = "cnsguest";
 
 //センサーポップアップのオブジェクトをセンサーの数作成
 const sensorPopupObjs = [];
-for (let i = 0; i < sensors.length; i++) {
-  sensorPopupObjs.push(new SensorPopup(sensors[i].name, sensors[i].location));
+for (let i = 0; i < sensorsData.length; i++) {
+  sensorPopupObjs.push(
+    new SensorPopup(sensorsData[i].name, sensorsData[i].location)
+  );
 }
 
 let mapCenter = [35.38742695145222, 139.42699632079737];
@@ -80,7 +49,7 @@ window.onload = function () {
       for (var i = 0; i < soxEvent.devices.length; i++) {
         //必要なセンサーのみ登録
         if (
-          sensors.findIndex(
+          sensorsData.findIndex(
             ({ name }) => name === soxEvent.devices[i].nodeName
           ) !== -1
         ) {

@@ -14,13 +14,16 @@
 <body>
     <div id="mapid"></div>
 
+
+    <!-- 表示したいセンサーを選択したファイル -->
+    <script src="js/sensorsData.js"></script>
+
+    <!-- leflet(地図) -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
-    <script src="https://d3js.org/d3.v3.min.js" language="JavaScript"></script>
-    <script src="js/liquidFillGauge.js" language="JavaScript"></script>
 
-    <!-- soxライブラリ -->
+    <!-- sox -->
     <script src="js/soxFolder/lib/jquery-1.10.2.js"></script>
     <script src="js/soxFolder/lib/jquery.dropotron.min.js"></script>
     <script src="js/soxFolder/lib/config.js"></script>
@@ -39,11 +42,17 @@
     <script src="js/soxFolder/sox/Transducer.js"></script>
     <script src="js/soxFolder/sox/SensorData.js"></script>
 
+    <!-- モーダルポップアップ -->
     <script src="js/jquery.magnific-popup.min.js"></script>
 
-    <script src="js/bToRColorTemperature.js"></script>
+    <!-- ゲージ -->
+    <script src="https://d3js.org/d3.v3.min.js" language="JavaScript"></script>
+    <script src="js/liquidFillGauge.js" language="JavaScript"></script>
 
+    <!-- マーカーとポップアップ -->
+    <script src="js/bToRColorTemperature.js"></script>
     <script src="js/sensorPopup.js"></script>
+
     <script src="js/main.js"></script>
 </body>
 
