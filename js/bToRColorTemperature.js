@@ -16,8 +16,8 @@ function getBToRColorTemperature(temperature, config) {
 }
 
 // how to use
-// let config = bToRColorTemperatureDefaultSettings();
+// const config = bToRColorTemperatureDefaultSettings();
 // config.maxTemperature = 50;
-// alert(getbToRColorTemperature(40, config));
+// alert(getBToRColorTemperature(40, config));
 //or just use like this
 // alert(getbToRColorTemperature(40));
