@@ -62,41 +62,7 @@ L.tileLayer(
 
 //マーカー作成
 for (let i = 0; i < sensorPopupObjs.length; i++) {
-  L.marker(sensorPopupObjs[i].location)
-    .addTo(mymap)
-    .bindPopup(
-      `<div id="${sensorPopupObjs[i].name}" class="test-popup-link"></div>`,
-      {
-        autoClose: false,
-        closeButton: false,
-        className: "popup",
-      }
-    )
-    .on("popupopen", () => {
-      sensorPopupObjs[i].setActive(true);
-      sensorPopupObjs[i].createGaugePopup();
-
-      $(".test-popup-link").magnificPopup({
-        items: [
-          {
-            src: "img1.jpg",
-          },
-          {
-            src: "img2.jpg",
-          },
-        ],
-        gallery: {
-          enabled: true,
-        },
-        type: "image",
-        // other options
-      });
-    })
-    .on("popupclose", () => {
-      sensorPopupObjs[i].setActive(false);
-    })
-
-    .openPopup();
+  sensorPopupObjs[i].createMarker(mymap);
 }
 
 window.onload = function () {

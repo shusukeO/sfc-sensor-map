@@ -24,6 +24,44 @@ class SensorPopup {
     this.isActive = value;
   }
 
+  createMarker(map) {
+    L.marker(this.location)
+      .addTo(map)
+      .bindPopup(`<div id="${this.name}" class="test-popup-link"></div>`, {
+        autoClose: false,
+        closeButton: false,
+        closeOnClick: false,
+        className: "popup",
+      })
+      //ポップアップオープン時の処理
+      .on("popupopen", () => {
+        this.setActive(true);
+        this.createGaugePopup();
+
+        $(".test-popup-link").magnificPopup({
+          items: [
+            {
+              src: "img1.jpg",
+            },
+            {
+              src: "img2.jpg",
+            },
+          ],
+          gallery: {
+            enabled: true,
+          },
+          type: "image",
+          // other options
+        });
+      })
+      //ポップアップクローズ時の処理
+      .on("popupclose", () => {
+        this.setActive(false);
+      })
+
+      .openPopup();
+  }
+
   createGaugePopup() {
     //表示状態でなければ処理を行わない
     if (!this.isActive) return;
