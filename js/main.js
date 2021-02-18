@@ -3,37 +3,47 @@ const boshService = "http://sox.sfc.keio.ac.jp:5280/http-bind/";
 const xmppServer = "sox.sfc.keio.ac.jp";
 const jid = "guest@sox.sfc.keio.ac.jp";
 const password = "cnsguest";
+const client = new SoxClient(boshService, xmppServer, jid, password);
+const soxEventListener = new SoxEventListener();
 
-let mapCenter = [35.38742695145222, 139.42699632079737];
-
-//地図作成
-const mymap = L.map("mapid").setView(mapCenter, 18);
-L.tileLayer(
-  "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
-  {
-    maxZoom: 18,
-    attribution:
-      'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-      'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    id: "mapbox/streets-v11",
-    tileSize: 512,
-    zoomOffset: -1,
-  }
-).addTo(mymap);
-
-//センサーポップアップのオブジェクトをセンサーの数作成
-const sensorPopupObjs = [];
-for (let i = 0; i < sensorsData.length; i++) {
-  sensorPopupObjs.push(
-    new SensorPopup(sensorsData[i].name, sensorsData[i].location)
-  );
-  //マーカー作成
-  sensorPopupObjs[i].createMarker(mymap);
-}
+const mapCenter = [35.38742695145222, 139.42699632079737];
 
 window.onload = function () {
-  const client = new SoxClient(boshService, xmppServer, jid, password);
-  const soxEventListener = new SoxEventListener();
+  //モーダル要素置き場の取得
+  const modalItems = $("#modal-items");
+
+  //地図作成
+  const mymap = L.map("mapid").setView(mapCenter, 18);
+  L.tileLayer(
+    "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
+    {
+      maxZoom: 18,
+      attribution:
+        'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      id: "mapbox/streets-v11",
+      tileSize: 512,
+      zoomOffset: -1,
+    }
+  ).addTo(mymap);
+
+  //センサーポップアップのオブジェクトをセンサーの数作成
+  const sensorPopupObjs = [];
+  const sensorModalObjs = [];
+  for (let i = 0; i < sensorsData.length; i++) {
+    sensorPopupObjs.push(
+      new SensorPopup(sensorsData[i].name, sensorsData[i].location)
+    );
+    //マーカー作成
+    sensorPopupObjs[i].createMarker(mymap);
+
+    sensorModalObjs.push(
+      new SensorModalElement(sensorsData[i].name, sensorsData[i].location)
+    );
+    sensorModalObjs[i].createModalElement(modalItems);
+  }
+
+  //sox接続
   soxEventListener.connected = function (soxEvent) {
     console.log("[main.js] Connected " + soxEvent.soxClient);
 
