@@ -37,7 +37,7 @@ class SensorPopup {
       .on("popupopen", () => {
         this.setActive(true);
         this.createGaugePopup();
-        this.createModal();
+        this.createModal(map);
       })
       //ポップアップクローズ時の処理
       .on("popupclose", () => {
@@ -47,7 +47,7 @@ class SensorPopup {
       .openPopup();
   }
 
-  createModal() {
+  createModal(map) {
     $(".modal-link").magnificPopup({
       delegate: "a",
       type: "inline",
@@ -58,8 +58,15 @@ class SensorPopup {
         open: function () {},
         close: function () {},
         // elementParse: function (item) {
-        //   item.src = item.src + "/val=123";
+        //   alert(item);
         // },
+        change: function () {
+          //モダールのスライドに合わせてマップの中心の移動
+          map.setView([
+            this.content.find(".longitude").val(),
+            this.content.find(".latitude").val(),
+          ]);
+        },
       },
     });
   }
