@@ -96,6 +96,7 @@ window.onload = function () {
       }
     }
 
+    //ポップアップ情報の更新
     for (let i = 0; i < sensorPopupObjs.length; i++) {
       if (sensorPopupObjs[i].getName() === `greenblue_sensor_${identifier}`) {
         sensorPopupObjs[i].setTemperature1(temperature1);
