@@ -3,7 +3,10 @@ const boshService = "http://sox.sfc.keio.ac.jp:5280/http-bind/";
 const xmppServer = "sox.sfc.keio.ac.jp";
 const jid = "guest@sox.sfc.keio.ac.jp";
 const password = "cnsguest";
-const client = new SoxClient(boshService, xmppServer, jid, password);
+const clients = [];
+for (let i = 0; i < sensorsData.length; i++) {
+  clients.push(new SoxClient(boshService, xmppServer, jid, password));
+}
 const soxEventListener = new SoxEventListener();
 
 const mapCenter = [35.38742695145222, 139.42699632079737];
@@ -53,6 +56,7 @@ window.onload = function () {
   soxEventListener.discovered = function (soxEvent) {
     try {
       console.log("[main.js] Discovered " + soxEvent.devices);
+      let clientsIndex = 0;
       for (var i = 0; i < soxEvent.devices.length; i++) {
         //必要なセンサーのみ登録
         if (
@@ -60,7 +64,8 @@ window.onload = function () {
             ({ name }) => name === soxEvent.devices[i].nodeName
           ) !== -1
         ) {
-          client.subscribeDevice(soxEvent.devices[i]);
+          clients[clientsIndex].subscribeDevice(soxEvent.devices[i]);
+          clientsIndex++;
           // alert(soxEvent.devices[i] + "を登録しました");
         }
       }
@@ -106,6 +111,8 @@ window.onload = function () {
     }
   };
 
-  client.setSoxEventListener(soxEventListener);
-  client.connect();
+  for (let i = 0; i < sensorsData.length; i++) {
+    clients[i].setSoxEventListener(soxEventListener);
+    clients[i].connect();
+  }
 };
