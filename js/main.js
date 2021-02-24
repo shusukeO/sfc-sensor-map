@@ -34,15 +34,18 @@ window.onload = function () {
   const sensorPopupObjs = [];
   const sensorModalObjs = [];
   for (let i = 0; i < sensorsData.length; i++) {
+    //マーカーオブジェクト作成
     sensorPopupObjs.push(
       new SensorPopup(sensorsData[i].name, sensorsData[i].location)
     );
     //マーカー作成
     sensorPopupObjs[i].createMarker(mymap);
 
+    //モーダルオブジェクト作成
     sensorModalObjs.push(
       new SensorModalElement(sensorsData[i].name, sensorsData[i].location)
     );
+    //モダール作成
     sensorModalObjs[i].createModalElement(modalItems);
   }
 
@@ -97,16 +100,23 @@ window.onload = function () {
             humidity1 = soxEvent.device.transducers[i].sensorData.rawValue;
             console.log(soxEvent.device.transducers[i].sensorData.rawValue);
             break;
+          // case "indoor_co2":
+          //   alert(soxEvent.device.transducers[i].sensorData.rawValue);
+          //   break;
         }
       }
     }
 
-    //ポップアップ情報の更新
     for (let i = 0; i < sensorPopupObjs.length; i++) {
       if (sensorPopupObjs[i].getName() === `greenblue_sensor_${identifier}`) {
+        //ポップアップ情報の更新
         sensorPopupObjs[i].setTemperature1(temperature1);
         sensorPopupObjs[i].setHumidity1(humidity1);
         sensorPopupObjs[i].createGaugePopup();
+
+        //モーダル情報の更新
+        sensorModalObjs[i].setTemperature1(temperature1);
+        sensorModalObjs[i].setHumidity1(humidity1);
       }
     }
   };
