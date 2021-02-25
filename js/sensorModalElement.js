@@ -2,8 +2,12 @@ class SensorModalElement {
   constructor(name, location) {
     this.name = name;
     this.location = location;
-    this.temperature1;
-    this.humidity1;
+    this.temperature1 = 0;
+    this.humidity1 = 0;
+    this.chartItems = [
+      { title: "気温", value: 0 },
+      { title: "湿度", value: 0 },
+    ];
   }
 
   setTemperature1(value) {
@@ -15,11 +19,13 @@ class SensorModalElement {
   }
 
   createModalElement(modalItems) {
-    const html = `
-    <div id="modal-${this.name}" class="mfp-hide white-popup"><input class="longitude" value="${this.location[0]}"type="hidden" /><input class="latitude" value="${this.location[1]}"type="hidden" />
-    <p>${this.name}</p><canvas id="myChart"></canvas>
-  </div>
-  `;
+    let html = `<div id="modal-${this.name}" class="mfp-hide white-popup"><input class="longitude" value="${this.location[0]}"type="hidden" /><input class="latitude" value="${this.location[1]}"type="hidden" /><p>${this.name}</p>`;
+
+    for (let i = 0; i < this.chartItems.length; i++) {
+      html += `<canvas id=${this.chartItems[i].title}></canvas>`;
+    }
+    html += "</div>";
+
     modalItems.prepend(html);
 
     const chartColors = {
@@ -34,64 +40,70 @@ class SensorModalElement {
 
     const color = Chart.helpers.color;
     const self = this;
-    const config = {
-      type: "line",
-      data: {
-        datasets: [
-          {
-            label: "気温の変化",
-            backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
-            borderColor: chartColors.blue,
-            fill: false,
-            cubicInterpolationMode: "monotone",
-            data: [],
-          },
-        ],
-      },
-      options: {
-        // title: {
-        //   display: false,
-        //   text: "ここはタイトル",
-        // },
-        scales: {
-          xAxes: [
-            {
-              type: "realtime",
-              realtime: {
-                duration: 86400000,
-                refresh: 60000,
-                delay: 120000,
-                onRefresh: function (chart) {
-                  chart.data.datasets[0].data.push({
-                    x: Date.now(),
+    let config;
+    let ctx;
 
-                    y: self.temperature1,
-                  });
+    for (let i = 0; i < this.chartItems.length; i++) {
+      config = {
+        type: "line",
+        data: {
+          datasets: [
+            {
+              label: this.chartItems[i].title,
+              backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
+              borderColor: chartColors.blue,
+              fill: false,
+              cubicInterpolationMode: "monotone",
+              data: [],
+            },
+          ],
+        },
+        options: {
+          scales: {
+            xAxes: [
+              {
+                type: "realtime",
+                realtime: {
+                  duration: 43200000,
+                  refresh: 60000,
+                  delay: 120000,
+                  onRefresh: function (chart) {
+                    //チャート用のデータをアップデート
+                    self.chartItems = [
+                      { title: "気温", value: self.temperature1 },
+                      { title: "湿度", value: self.humidity1 },
+                    ];
+                    chart.data.datasets[0].data.push({
+                      x: Date.now(),
+
+                      y: self.chartItems[i].value,
+                    });
+                  },
                 },
               },
-            },
-          ],
-          yAxes: [
-            {
-              scaleLabel: {
-                display: true,
-                labelString: "value",
+            ],
+            yAxes: [
+              {
+                scaleLabel: {
+                  display: true,
+                  labelString: "value",
+                },
               },
-            },
-          ],
+            ],
+          },
+          tooltips: {
+            mode: "nearest",
+            intersect: false,
+          },
+          hover: {
+            mode: "nearest",
+            intersect: false,
+          },
         },
-        tooltips: {
-          mode: "nearest",
-          intersect: false,
-        },
-        hover: {
-          mode: "nearest",
-          intersect: false,
-        },
-      },
-    };
+      };
 
-    const ctx = document.getElementById("myChart").getContext("2d");
-    window.myChart = new Chart(ctx, config);
+      ctx = document.getElementById(this.chartItems[i].title).getContext("2d");
+      window.myChart = new Chart(ctx, config);
+    }
   }
 }
