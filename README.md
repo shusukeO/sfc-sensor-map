@@ -9,7 +9,7 @@ js/sensorsData.js に sox に登録されているデバイス名、設置場所
 ```js
 {
   name: "登録されているデバイス名",
-  label: "表示名",
+  label: "ウェブ上での表示名",
   location: [緯度, 経度],
 },
 ```
