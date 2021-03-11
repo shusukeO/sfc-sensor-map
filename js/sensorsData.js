@@ -14,13 +14,13 @@ const sensorsData = [
   //中高部
   {
     name: "greenblue_sensor_200006",
-    label: "本館",
+    label: "中高部",
     location: [35.385887600519254, 139.42571612055917],
   },
   //i前
   {
     name: "greenblue_sensor_301001",
-    label: "中高部",
+    label: "i前",
     location: [35.38841346727527, 139.42666895800951],
   },
   //i中
