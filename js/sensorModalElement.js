@@ -6,8 +6,8 @@ class SensorModalElement {
     this.temperature1 = 0;
     this.humidity1 = 0;
     this.chartItems = [
-      { title: "気温", value: 0 },
-      { title: "湿度", value: 0 },
+      { title: "気温", unitLabel: "℃", value: 0 },
+      { title: "湿度", unitLabel: "%", value: 0 },
     ];
   }
 
@@ -71,8 +71,8 @@ class SensorModalElement {
                   onRefresh: function (chart) {
                     //チャート用のデータをアップデート
                     self.chartItems = [
-                      { title: "気温", value: self.temperature1 },
-                      { title: "湿度", value: self.humidity1 },
+                      { value: self.temperature1 },
+                      { value: self.humidity1 },
                     ];
                     chart.data.datasets[0].data.push({
                       x: Date.now(),
@@ -87,7 +87,7 @@ class SensorModalElement {
               {
                 scaleLabel: {
                   display: true,
-                  labelString: "value",
+                  labelString: this.chartItems[i].unitLabel,
                 },
               },
             ],
