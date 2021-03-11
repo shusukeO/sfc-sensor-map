@@ -1,6 +1,7 @@
 class SensorModalElement {
-  constructor(name, location) {
+  constructor(name, label, location) {
     this.name = name;
+    this.label = label;
     this.location = location;
     this.temperature1 = 0;
     this.humidity1 = 0;
@@ -19,7 +20,7 @@ class SensorModalElement {
   }
 
   createModalElement(modalItems) {
-    let html = `<div id="modal-${this.name}" class="mfp-hide white-popup"><input class="longitude" value="${this.location[0]}"type="hidden" /><input class="latitude" value="${this.location[1]}"type="hidden" /><p>${this.name}</p>`;
+    let html = `<div id="modal-${this.name}" class="mfp-hide white-popup"><input class="longitude" value="${this.location[0]}"type="hidden" /><input class="latitude" value="${this.location[1]}"type="hidden" /><p>${this.label}</p>`;
 
     for (let i = 0; i < this.chartItems.length; i++) {
       html += `<canvas id=${this.chartItems[i].title}></canvas>`;

@@ -43,7 +43,11 @@ window.onload = function () {
 
     //モーダルオブジェクト作成
     sensorModalObjs.push(
-      new SensorModalElement(sensorsData[i].name, sensorsData[i].location)
+      new SensorModalElement(
+        sensorsData[i].name,
+        sensorsData[i].label,
+        sensorsData[i].location
+      )
     );
     //モダール作成
     sensorModalObjs[i].createModalElement(modalItems);
