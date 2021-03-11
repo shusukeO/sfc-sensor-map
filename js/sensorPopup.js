@@ -6,6 +6,7 @@ class SensorPopup {
     this.humidity1 = 0;
     this.isActive = false;
     this.config = liquidFillGaugeDefaultSettings();
+    this.gauge;
   }
 
   setTemperature1(value) {
@@ -84,6 +85,10 @@ class SensorPopup {
     this.config.waveAnimateTime = 2000;
 
     this.config.circleColor = getBToRColorTemperature(this.temperature1);
-    loadLiquidFillGauge(`fillgauge-${this.name}`, this.humidity1, this.config);
+    this.gauge = loadLiquidFillGauge(
+      `fillgauge-${this.name}`,
+      this.humidity1,
+      this.config
+    );
   }
 }
