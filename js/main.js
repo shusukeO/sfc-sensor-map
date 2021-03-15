@@ -98,11 +98,11 @@ window.onload = function () {
             break;
           case 'temperature1':
             temperature1 = soxEvent.device.transducers[i].sensorData.rawValue;
-            console.log(soxEvent.device.transducers[i].sensorData.rawValue);
+            // console.log(soxEvent.device.transducers[i].sensorData.rawValue);
             break;
           case 'humidity1':
             humidity1 = soxEvent.device.transducers[i].sensorData.rawValue;
-            console.log(soxEvent.device.transducers[i].sensorData.rawValue);
+            // console.log(soxEvent.device.transducers[i].sensorData.rawValue);
             break;
           // case "indoor_co2":
           //   alert(soxEvent.device.transducers[i].sensorData.rawValue);
