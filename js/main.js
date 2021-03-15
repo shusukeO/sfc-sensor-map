@@ -1,8 +1,8 @@
 //sox接続設定
-const boshService = "http://sox.sfc.keio.ac.jp:5280/http-bind/";
-const xmppServer = "sox.sfc.keio.ac.jp";
-const jid = "guest@sox.sfc.keio.ac.jp";
-const password = "cnsguest";
+const boshService = 'http://sox.sfc.keio.ac.jp:5280/http-bind/';
+const xmppServer = 'sox.sfc.keio.ac.jp';
+const jid = 'guest@sox.sfc.keio.ac.jp';
+const password = 'cnsguest';
 const clients = [];
 for (let i = 0; i < sensorsData.length; i++) {
   clients.push(new SoxClient(boshService, xmppServer, jid, password));
@@ -13,18 +13,18 @@ const mapCenter = [35.38742695145222, 139.42699632079737];
 
 window.onload = function () {
   //モーダル要素置き場の取得
-  const modalItems = $("#modal-items");
+  const modalItems = $('#modal-items');
 
   //地図作成
-  const mymap = L.map("mapid").setView(mapCenter, 18);
+  const mymap = L.map('mapid').setView(mapCenter, 18);
   L.tileLayer(
-    "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
+    'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
     {
       maxZoom: 18,
       attribution:
         'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
         'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      id: "mapbox/streets-v11",
+      id: 'mapbox/streets-v11',
       tileSize: 512,
       zoomOffset: -1,
     }
@@ -55,14 +55,14 @@ window.onload = function () {
 
   //sox接続
   soxEventListener.connected = function (soxEvent) {
-    console.log("[main.js] Connected " + soxEvent.soxClient);
+    console.log('[main.js] Connected ' + soxEvent.soxClient);
 
     soxEvent.soxClient.discoverDevices();
   };
 
   soxEventListener.discovered = function (soxEvent) {
     try {
-      console.log("[main.js] Discovered " + soxEvent.devices);
+      console.log('[main.js] Discovered ' + soxEvent.devices);
       let clientsIndex = 0;
       for (var i = 0; i < soxEvent.devices.length; i++) {
         //必要なセンサーのみ登録
@@ -83,24 +83,24 @@ window.onload = function () {
 
   //データ受信イベント
   soxEventListener.sensorDataReceived = function (soxEvent) {
-    let temperature1 = "";
-    let humidity1 = "";
-    let identifier = "";
+    let temperature1 = '';
+    let humidity1 = '';
+    let identifier = '';
     // alert(soxEvent.device.name + "の情報を受け取りました");
 
     for (var i = 0; i < soxEvent.device.transducers.length; i++) {
       if (soxEvent.device.transducers[i].sensorData != null) {
         switch (soxEvent.device.transducers[i].id) {
-          case "identifier":
+          case 'identifier':
             identifier = soxEvent.device.transducers[i].sensorData.rawValue;
             // alert(identifier + "の情報を受け取りました");
 
             break;
-          case "temperature1":
+          case 'temperature1':
             temperature1 = soxEvent.device.transducers[i].sensorData.rawValue;
             console.log(soxEvent.device.transducers[i].sensorData.rawValue);
             break;
-          case "humidity1":
+          case 'humidity1':
             humidity1 = soxEvent.device.transducers[i].sensorData.rawValue;
             console.log(soxEvent.device.transducers[i].sensorData.rawValue);
             break;
