@@ -6,8 +6,8 @@ class SensorModalElement {
     this.temperature1 = 0;
     this.humidity1 = 0;
     this.chartItems = [
-      { title: "気温", unitLabel: "℃", value: 0 },
-      { title: "湿度", unitLabel: "%", value: 0 },
+      { title: '気温', unitLabel: '℃', value: 0 },
+      { title: '湿度', unitLabel: '%', value: 0 },
     ];
   }
 
@@ -25,18 +25,18 @@ class SensorModalElement {
     for (let i = 0; i < this.chartItems.length; i++) {
       html += `<canvas id=${this.chartItems[i].title}></canvas>`;
     }
-    html += "</div>";
+    html += '</div>';
 
     modalItems.prepend(html);
 
     const chartColors = {
-      red: "rgb(255, 99, 132)",
-      orange: "rgb(255, 159, 64)",
-      yellow: "rgb(255, 205, 86)",
-      green: "rgb(75, 192, 192)",
-      blue: "rgb(54, 162, 235)",
-      purple: "rgb(153, 102, 255)",
-      grey: "rgb(201, 203, 207)",
+      red: 'rgb(255, 99, 132)',
+      orange: 'rgb(255, 159, 64)',
+      yellow: 'rgb(255, 205, 86)',
+      green: 'rgb(75, 192, 192)',
+      blue: 'rgb(54, 162, 235)',
+      purple: 'rgb(153, 102, 255)',
+      grey: 'rgb(201, 203, 207)',
     };
 
     const color = Chart.helpers.color;
@@ -46,7 +46,7 @@ class SensorModalElement {
 
     for (let i = 0; i < this.chartItems.length; i++) {
       config = {
-        type: "line",
+        type: 'line',
         data: {
           datasets: [
             {
@@ -54,7 +54,7 @@ class SensorModalElement {
               backgroundColor: color(chartColors.blue).alpha(0.5).rgbString(),
               borderColor: chartColors.blue,
               fill: false,
-              cubicInterpolationMode: "monotone",
+              cubicInterpolationMode: 'monotone',
               data: [],
             },
           ],
@@ -63,7 +63,7 @@ class SensorModalElement {
           scales: {
             xAxes: [
               {
-                type: "realtime",
+                type: 'realtime',
                 realtime: {
                   duration: 43200000,
                   refresh: 60000,
@@ -74,11 +74,21 @@ class SensorModalElement {
                       { value: self.temperature1 },
                       { value: self.humidity1 },
                     ];
+
+                    if (chart.data.datasets[0].data.length > 722) {
+                      chart.data.datasets[0].data.shift();
+                    }
+
                     chart.data.datasets[0].data.push({
                       x: Date.now(),
 
                       y: self.chartItems[i].value,
                     });
+
+                    console.log(
+                      'チャート上のデータの数' +
+                        chart.data.datasets[0].data.length
+                    );
                   },
                 },
               },
@@ -93,17 +103,17 @@ class SensorModalElement {
             ],
           },
           tooltips: {
-            mode: "nearest",
+            mode: 'nearest',
             intersect: false,
           },
           hover: {
-            mode: "nearest",
+            mode: 'nearest',
             intersect: false,
           },
         },
       };
 
-      ctx = document.getElementById(this.chartItems[i].title).getContext("2d");
+      ctx = document.getElementById(this.chartItems[i].title).getContext('2d');
       window.myChart = new Chart(ctx, config);
     }
   }
