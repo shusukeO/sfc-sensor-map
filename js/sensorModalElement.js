@@ -84,11 +84,6 @@ class SensorModalElement {
 
                       y: self.chartItems[i].value,
                     });
-
-                    console.log(
-                      'チャート上のデータの数' +
-                        chart.data.datasets[0].data.length
-                    );
                   },
                 },
               },
