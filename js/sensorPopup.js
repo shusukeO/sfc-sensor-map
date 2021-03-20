@@ -7,6 +7,7 @@ class SensorPopup {
     this.isActive = false;
     this.config = liquidFillGaugeDefaultSettings();
     this.gauge;
+    this.modal;
   }
 
   setTemperature1(value) {
@@ -32,16 +33,16 @@ class SensorPopup {
         autoClose: false,
         closeButton: false,
         closeOnClick: false,
-        className: "popup",
+        className: 'popup',
       })
       //ポップアップオープン時の処理
-      .on("popupopen", () => {
+      .on('popupopen', () => {
         this.setActive(true);
         this.createGaugePopup();
-        this.createModal(map);
+        this.modal = this.createModal(map);
       })
       //ポップアップクローズ時の処理
-      .on("popupclose", () => {
+      .on('popupclose', () => {
         this.setActive(false);
       })
 
@@ -49,9 +50,9 @@ class SensorPopup {
   }
 
   createModal(map) {
-    $(".modal-link").magnificPopup({
-      delegate: "a",
-      type: "inline",
+    $('.modal-link').magnificPopup({
+      delegate: 'a',
+      type: 'inline',
       gallery: {
         enabled: true,
       },
@@ -64,8 +65,8 @@ class SensorPopup {
         change: function () {
           //モダールのスライドに合わせてマップの中心の移動
           map.setView([
-            this.content.find(".longitude").val(),
-            this.content.find(".latitude").val(),
+            this.content.find('.longitude').val(),
+            this.content.find('.latitude').val(),
           ]);
         },
       },
