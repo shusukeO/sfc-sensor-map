@@ -13,3 +13,5 @@ js/sensorsData.js に sox に登録されているデバイス名、設置場所
   location: [緯度, 経度],
 },
 ```
+
+![画面収録 2021-02-27 9 19 45 mov](https://user-images.githubusercontent.com/56382189/118574399-4b022380-b7bf-11eb-9238-3547b2b91ab7.gif)
